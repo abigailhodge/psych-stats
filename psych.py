@@ -2,7 +2,6 @@
 import math
 import numpy
 from collections import Counter
-
 # calculates the median of a given list
 def median(numbers):
     numbers.sort()
@@ -48,6 +47,7 @@ def standdev(numbers):
     return math.sqrt(variance(numbers))
 
 # given a list of numbers and a countby, return a frequency distribution
+# in form of (lower bound, upper bound, count)
 def freqdist(numbers, countby):
     if (min(numbers) % countby == 0):
         lowest = min(numbers)
@@ -57,7 +57,7 @@ def freqdist(numbers, countby):
             lowest -= 1
     binlist = []
     while (lowest < max(numbers)):
-        binlist.insert(-1, lowest)
+        binlist.insert(0, lowest)
         lowest += countby
     bincounts = []
     for eachbin in binlist:
@@ -65,7 +65,21 @@ def freqdist(numbers, countby):
         for num in numbers:
             if (num >= eachbin) and (num < eachbin + countby):
                 bincount += 1
-        bincounts.insert(-1, (str(eachbin) + "-" + str(eachbin + countby - 1), bincount))
-    bincounts.sort()
+        bincounts.insert(0, (str(eachbin) + '-' + str(eachbin + countby - 1), bincount))
     return bincounts
+
+
+#returns the relative grouped frequency distribution
+def rfdist(numbers, countby):
+    fdist = freqdist(numbers, countby)
+    length = len(numbers)
+    return [(bounds, result / length) for (bounds, result) in fdist]
+
+# returns an array of (number, zscore) pairs for numbers in a list
+def zscores(numbers):
+    m = mean(numbers)
+    sd = standdev(numbers)
+    return [(number, (number - m) / sd) for number in numbers]
+
+
                          
